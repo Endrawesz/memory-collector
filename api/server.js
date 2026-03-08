@@ -92,9 +92,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_DIR),
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname) || (file.mimetype.startsWith('video') ? '.mp4' : '.jpg');
-    cb(null, crypto.randomBytes(8).toString('hex') + ext);
-  }
+      // Derive extension from mimetype directly — more reliable than original filename
+      let ext = '.jpg';
+      if (file.mimetype === 'image/png') ext = '.png';
+      else if (file.mimetype === 'image/gif') ext = '.gif';
+      else if (file.mimetype === 'image/webp') ext = '.webp';
+      else if (file.mimetype === 'image/heic') ext = '.heic';
+      else if (file.mimetype === 'video/mp4') ext = '.mp4';
+      else if (file.mimetype === 'video/quicktime') ext = '.mov';
+      else if (file.mimetype === 'video/webm') ext = '.webm';
+      else if (file.mimetype.startsWith('video/')) ext = '.mp4';
+      else if (file.mimetype.startsWith('image/')) ext = '.jpg';
+      cb(null, crypto.randomBytes(8).toString('hex') + ext);
+    }
 });
 
 const upload = multer({
