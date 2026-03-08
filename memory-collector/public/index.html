@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Share Your Memories ✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #faf7f2;
+      --warm-white: #fff9f4;
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --dark: #1a1612;
+      --mid: #4a3f35;
+      --muted: #8c7d70;
+      --rose: #e8b4a0;
+      --green: #7aab8a;
+      --radius: 18px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Decorative background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -20%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(122,171,138,0.1) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 20px 20px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 40px 0 32px;
+    }
+
+    .header .event-badge {
+      display: inline-block;
+      background: var(--gold-light);
+      color: var(--mid);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 8vw, 40px);
+      color: var(--dark);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .header h1 span {
+      color: var(--gold);
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    /* Progress pill */
+    .progress-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+      border: 1px solid rgba(201,169,110,0.2);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-label {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-count {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--dark);
+    }
+
+    .progress-count span {
+      color: var(--gold);
+    }
+
+    .progress-bar-track {
+      height: 6px;
+      background: var(--gold-light);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), #b8903a);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    /* Step cards */
+    .step-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .step-card.active {
+      border-color: var(--gold-light);
+      box-shadow: 0 4px 30px rgba(201,169,110,0.2);
+    }
+
+    .step-card.completed {
+      opacity: 0.7;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      background: var(--gold-light);
+      color: var(--mid);
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .step-card.completed .step-number {
+      background: var(--green);
+      color: white;
+    }
+
+    .step-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      margin-bottom: 6px;
+    }
+
+    .step-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    /* Inputs */
+    input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid #e8e0d8;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--dark);
+      background: var(--warm-white);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.15);
+    }
+
+    input::placeholder { color: #c0b4a8; }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 15px 24px;
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #c9a96e, #b8903a);
+      color: white;
+      box-shadow: 0 4px 15px rgba(201,169,110,0.35);
+    }
+
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,169,110,0.45); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: var(--cream);
+      color: var(--mid);
+      border: 1.5px solid #e0d8ce;
+    }
+
+    .btn-secondary:hover { background: var(--gold-light); border-color: var(--gold-light); }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 2px dashed var(--gold-light);
+      border-radius: var(--radius);
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: linear-gradient(135deg, #fdfaf6, #fff9f4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.05);
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .upload-zone h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .upload-zone p {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Media type buttons */
+    .media-type-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .media-type-btn {
+      padding: 12px;
+      border: 1.5px solid #e8e0d8;
+      border-radius: 12px;
+      background: white;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--mid);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .media-type-btn input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .media-type-btn.selected {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.08);
+      color: var(--dark);
+    }
+
+    .media-type-btn span { display: block; font-size: 22px; margin-bottom: 4px; }
+
+    /* Preview grid */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .preview-item {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--gold-light);
+      position: relative;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .preview-item img, .preview-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 22px;
+      height: 22px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .preview-item .type-badge {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      background: rgba(0,0,0,0.55);
+      color: white;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* Upload progress */
+    .upload-progress-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0ebe4;
+      font-size: 13px;
+    }
+
+    .upload-progress-item:last-child { border-bottom: none; }
+
+    .file-thumb {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--gold-light);
+    }
+
+    .file-info { flex: 1; min-width: 0; }
+    .file-name { font-weight: 500; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-status { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    .file-status-icon { font-size: 16px; flex-shrink: 0; }
+
+    /* Success screen */
+    .success-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--green), #5a9a6a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 24px;
+      box-shadow: 0 8px 30px rgba(122,171,138,0.35);
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .success-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .success-screen p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    /* Limit warning */
+    .limit-warning {
+      background: #fff3e0;
+      border: 1px solid #ffcc80;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #e65100;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--dark);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 1000;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Disabled state */
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Hidden */
+    .hidden { display: none !important; }
+
+    /* Loading spinner */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Divider */
+    .divider {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin: 8px 0;
+      position: relative;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: #e8e0d8;
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .tagline {
+      text-align: center;
+      padding: 20px 0 10px;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    /* Blocked screen */
+    .blocked-screen {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .blocked-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .blocked-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .blocked-screen p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="event-badge" id="eventBadge">📸 Memory Collection</div>
+    <h1>Share Your <span>Memories</span></h1>
+    <p>Upload your photos & videos — they'll be collected together for everyone to cherish.</p>
+  </div>
+
+  <!-- Blocked screen (shown when limit reached or token invalid) -->
+  <div id="blockedScreen" class="blocked-screen hidden">
+    <span class="blocked-icon">🚫</span>
+    <h2>Upload Limit Reached</h2>
+    <p>You've used all your available uploads for this event. Thank you for sharing!</p>
+  </div>
+
+  <!-- Invalid token screen -->
+  <div id="invalidScreen" class="blocked-screen hidden">
+    <span class="blocked-icon">🔒</span>
+    <h2>Invalid Access Link</h2>
+    <p>This link is not valid. Please scan the QR code again or contact the event organizer.</p>
+  </div>
+
+  <!-- Main content (shown when valid) -->
+  <div id="mainContent" class="hidden">
+
+    <!-- Progress -->
+    <div class="progress-card">
+      <div class="progress-header">
+        <span class="progress-label">YOUR UPLOADS</span>
+        <span class="progress-count"><span id="uploadedCount">0</span> / <span id="totalLimit">25</span></span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Step 1: Name -->
+    <div class="step-card active" id="step1Card">
+      <div class="step-number" id="step1Num">1</div>
+      <div class="step-title">What's your name?</div>
+      <div class="step-subtitle">Your name will be attached to each file you upload.</div>
+      <input type="text" id="nameInput" placeholder="Enter your name..." maxlength="60" />
+      <div style="height: 12px"></div>
+      <button class="btn btn-primary" onclick="submitName()">Continue →</button>
+    </div>
+
+    <!-- Step 2: Upload (hidden initially) -->
+    <div class="step-card hidden" id="step2Card">
+      <div class="step-number" id="step2Num">2</div>
+      <div class="step-title">Add your photos & videos</div>
+      <div class="step-subtitle">
+        Select files from your camera roll or take new ones.<br>
+        <strong id="remainingText"></strong>
+      </div>
+
+      <div class="media-type-row">
+        <label class="media-type-btn" id="photoBtn">
+          <input type="file" accept="image/*" multiple onchange="handleFiles(event)" capture="environment" id="photoInput" />
+          <span>📷</span>Photo
+        </label>
+        <label class="media-type-btn" id="videoBtn">
+          <input type="file" accept="video/*" multiple onchange="handleFiles(event)" capture="environment" id="videoInput" />
+          <span>🎬</span>Video (≤30s)
+        </label>
+      </div>
+
+      <div class="divider">or</div>
+
+      <div class="upload-zone" id="uploadZone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <input type="file" accept="image/*,video/*" multiple onchange="handleFiles(event)" id="galleryInput" />
+        <span class="upload-icon">🗂️</span>
+        <h3>Choose from gallery</h3>
+        <p>Photos or videos up to 30 seconds</p>
+      </div>
+
+      <div class="limit-warning" id="limitWarning">
+        ⚠️ You can only upload <strong id="remainingWarn"></strong> more files. Some selections were removed.
+      </div>
+
+      <!-- Preview -->
+      <div class="preview-grid" id="previewGrid"></div>
+
+      <!-- Upload button -->
+      <div style="height: 16px"></div>
+      <button class="btn btn-primary" id="uploadBtn" onclick="startUpload()" disabled>
+        Upload My Memories
+      </button>
+      <div style="height: 8px"></div>
+      <button class="btn btn-secondary" onclick="clearFiles()">Clear All</button>
+
+    </div>
+
+    <!-- Step 3: Uploading progress -->
+    <div class="step-card hidden" id="step3Card">
+      <div class="step-number">3</div>
+      <div class="step-title">Uploading…</div>
+      <div class="step-subtitle">Please keep this page open until complete.</div>
+      <div id="uploadProgressList"></div>
+    </div>
+
+  </div>
+
+  <!-- Success screen -->
+  <div id="successScreen" class="hidden">
+    <div class="success-screen">
+      <div class="success-icon">✓</div>
+      <h2>Thank you, <span id="successName"></span>!</h2>
+      <p>Your memories have been saved successfully.</p>
+      <p style="margin-top: 4px; font-size: 13px;">They'll be part of the shared collection for everyone to enjoy.</p>
+
+      <div style="height: 30px"></div>
+      <div class="progress-card">
+        <div class="progress-header">
+          <span class="progress-label">UPLOADED</span>
+          <span class="progress-count"><span id="finalCount">0</span> files</span>
+        </div>
+      </div>
+
+      <div style="height: 20px"></div>
+      <button class="btn btn-secondary" onclick="uploadMore()" id="uploadMoreBtn">Upload More</button>
+    </div>
+  </div>
+
+  <div class="tagline">✦ MEMORIES COLLECTED WITH LOVE ✦</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ============================
+  // CONFIG - Edit these values
+  // ============================
+  const CONFIG = {
+    maxUploads: 25,
+    maxVideoSeconds: 30,
+    // This is set via URL param ?token=XXXX
+    // Backend URL - update this after deploying backend
+    backendUrl: window.BACKEND_URL || 'https://your-backend.railway.app',
+    eventName: window.EVENT_NAME || 'Memory Collection'
+  };
+
+  // ============================
+  // State
+  // ============================
+  let state = {
+    token: null,
+    uploaderName: null,
+    uploadedCount: 0,
+    remainingUploads: CONFIG.maxUploads,
+    selectedFiles: [],
+    isUploading: false,
+    sessionId: null
+  };
+
+  // ============================
+  // Init
+  // ============================
+  document.addEventListener('DOMContentLoaded', async () => {
+    document.getElementById('eventBadge').textContent = '📸 ' + CONFIG.eventName;
+
+    const params = new URLSearchParams(window.location.search);
+    state.token = params.get('token');
+
+    if (!state.token) {
+      showInvalidScreen();
+      return;
+    }
+
+    // Validate token and get upload count
+    try {
+      const res = await fetch(`${CONFIG.backendUrl}/api/validate?token=${state.token}`);
+      if (!res.ok) throw new Error('Invalid');
+      const data = await res.json();
+
+      if (!data.valid) {
+        showInvalidScreen();
+        return;
+      }
+
+      state.uploadedCount = data.uploadedCount || 0;
+      state.remainingUploads = CONFIG.maxUploads - state.uploadedCount;
+      state.uploaderName = data.savedName || null;
+
+      if (state.remainingUploads <= 0) {
+        showBlockedScreen();
+        return;
+      }
+
+      showMainContent();
+      updateProgress();
+
+      // If name was previously saved, skip step 1
+      if (state.uploaderName) {
+        skipToUpload();
+      }
+
+    } catch (e) {
+      // Offline/dev mode - allow without backend
+      console.warn('Backend not available, running in demo mode');
+      showMainContent();
+      updateProgress();
+    }
+  });
+
+  function showInvalidScreen() {
+    document.getElementById('invalidScreen').classList.remove('hidden');
+  }
+
+  function showBlockedScreen() {
+    document.getElementById('blockedScreen').classList.remove('hidden');
+  }
+
+  function showMainContent() {
+    document.getElementById('mainContent').classList.remove('hidden');
+  }
+
+  function updateProgress() {
+    document.getElementById('uploadedCount').textContent = state.uploadedCount;
+    document.getElementById('totalLimit').textContent = CONFIG.maxUploads;
+    const pct = (state.uploadedCount / CONFIG.maxUploads) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    updateRemainingText();
+  }
+
+  function updateRemainingText() {
+    const remaining = state.remainingUploads - state.selectedFiles.length;
+    const el = document.getElementById('remainingText');
+    if (el) el.textContent = `You can still upload ${Math.max(0, remaining)} more files.`;
+  }
+
+  // ============================
+  // Step 1 - Name
+  // ============================
+  async function submitName() {
+    const name = document.getElementById('nameInput').value.trim();
+    if (!name) {
+      showToast('Please enter your name 👋');
+      document.getElementById('nameInput').focus();
+      return;
+    }
+
+    state.uploaderName = name;
+
+    // Save name to backend
+    try {
+      await fetch(`${CONFIG.backendUrl}/api/save-name`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: state.token, name })
+      });
+    } catch (e) { /* offline */ }
+
+    skipToUpload();
+  }
+
+  function skipToUpload() {
+    document.getElementById('step1Card').classList.add('completed');
+    document.getElementById('step1Num').textContent = '✓';
+    document.getElementById('step2Card').classList.remove('hidden');
+    document.getElementById('step2Card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    updateRemainingText();
+  }
+
+  // ============================
+  // Step 2 - File Selection
+  // ============================
+  function handleFiles(event) {
+    const newFiles = Array.from(event.target.files);
+    addFiles(newFiles);
+    event.target.value = ''; // Reset input
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+    document.getElementById('uploadZone').classList.remove('drag-over');
+    addFiles(Array.from(event.dataTransfer.files));
+  }
+
+  function handleDragOver(event) {
+    event.preventDefault();
+    document.getElementById('uploadZone').classList.add('drag-over');
+  }
+
+  function handleDragLeave() {
+    document.getElementById('uploadZone').classList.remove('drag-over');
+  }
+
+  async function addFiles(newFiles) {
+    const maxNew = state.remainingUploads - state.selectedFiles.length;
+
+    // Filter valid types
+    const valid = newFiles.filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
+
+    // Check video duration (async)
+    const checked = [];
+    for (const f of valid) {
+      if (f.type.startsWith('video/')) {
+        const ok = await checkVideoDuration(f);
+        if (!ok) {
+          showToast(`⚠️ "${f.name}" is longer than 30s — skipped`);
+          continue;
+        }
+      }
+      checked.push(f);
+    }
+
+    if (checked.length > maxNew) {
+      const removed = checked.length - maxNew;
+      checked.splice(maxNew);
+      document.getElementById('limitWarning').style.display = 'block';
+      document.getElementById('remainingWarn').textContent = maxNew;
+    } else {
+      document.getElementById('limitWarning').style.display = 'none';
+    }
+
+    state.selectedFiles.push(...checked);
+    renderPreviews();
+    updateUploadBtn();
+    updateRemainingText();
+  }
+
+  function checkVideoDuration(file) {
+    return new Promise(resolve => {
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.onloadedmetadata = () => {
+        URL.revokeObjectURL(video.src);
+        resolve(video.duration <= CONFIG.maxVideoSeconds);
+      };
+      video.onerror = () => resolve(true); // Allow if can't check
+      video.src = URL.createObjectURL(file);
+    });
+  }
+
+  function renderPreviews() {
+    const grid = document.getElementById('previewGrid');
+    grid.innerHTML = '';
+    state.selectedFiles.forEach((file, i) => {
+      const item = document.createElement('div');
+      item.className = 'preview-item';
+
+      const url = URL.createObjectURL(file);
+      const isVideo = file.type.startsWith('video/');
+
+      if (isVideo) {
+        const vid = document.createElement('video');
+        vid.src = url;
+        vid.muted = true;
+        vid.playsInline = true;
+        item.appendChild(vid);
+      } else {
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = '';
+        item.appendChild(img);
+      }
+
+      const badge = document.createElement('span');
+      badge.className = 'type-badge';
+      badge.textContent = isVideo ? '🎬 VIDEO' : '📷 PHOTO';
+      item.appendChild(badge);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.textContent = '×';
+      removeBtn.onclick = () => removeFile(i);
+      item.appendChild(removeBtn);
+
+      grid.appendChild(item);
+    });
+  }
+
+  function removeFile(index) {
+    state.selectedFiles.splice(index, 1);
+    renderPreviews();
+    updateUploadBtn();
+    updateRemainingText();
+    document.getElementById('limitWarning').style.display = 'none';
+  }
+
+  function clearFiles() {
+    state.selectedFiles = [];
+    renderPreviews();
+    updateUploadBtn();
+    updateRemainingText();
+  }
+
+  function updateUploadBtn() {
+    const btn = document.getElementById('uploadBtn');
+    btn.disabled = state.selectedFiles.length === 0;
+    if (state.selectedFiles.length > 0) {
+      btn.textContent = `Upload ${state.selectedFiles.length} File${state.selectedFiles.length > 1 ? 's' : ''}`;
+    } else {
+      btn.textContent = 'Upload My Memories';
+    }
+  }
+
+  // ============================
+  // Step 3 - Upload
+  // ============================
+  async function startUpload() {
+    if (state.isUploading || state.selectedFiles.length === 0) return;
+    state.isUploading = true;
+
+    document.getElementById('step2Card').classList.add('hidden');
+    document.getElementById('step3Card').classList.remove('hidden');
+    document.getElementById('step3Card').scrollIntoView({ behavior: 'smooth' });
+
+    const list = document.getElementById('uploadProgressList');
+    list.innerHTML = '';
+
+    const results = [];
+
+    for (let i = 0; i < state.selectedFiles.length; i++) {
+      const file = state.selectedFiles[i];
+      const isVideo = file.type.startsWith('video/');
+
+      // Create row
+      const row = document.createElement('div');
+      row.className = 'upload-progress-item';
+
+      const thumb = document.createElement(isVideo ? 'video' : 'img');
+      thumb.className = 'file-thumb';
+      thumb.src = URL.createObjectURL(file);
+      if (isVideo) { thumb.muted = true; thumb.playsInline = true; }
+
+      const info = document.createElement('div');
+      info.className = 'file-info';
+      const name = document.createElement('div');
+      name.className = 'file-name';
+      name.textContent = file.name || `File ${i + 1}`;
+      const status = document.createElement('div');
+      status.className = 'file-status';
+      status.textContent = 'Uploading…';
+      info.appendChild(name);
+      info.appendChild(status);
+
+      const icon = document.createElement('span');
+      icon.className = 'file-status-icon';
+      icon.textContent = '⏳';
+
+      row.appendChild(thumb);
+      row.appendChild(info);
+      row.appendChild(icon);
+      list.appendChild(row);
+
+      // Upload this file
+      try {
+        await uploadSingleFile(file, i, status, icon);
+        results.push({ success: true });
+        state.uploadedCount++;
+        state.remainingUploads--;
+        updateProgress();
+      } catch (e) {
+        status.textContent = 'Failed — ' + (e.message || 'error');
+        icon.textContent = '❌';
+        results.push({ success: false });
+      }
+    }
+
+    // Done
+    state.isUploading = false;
+    state.selectedFiles = [];
+
+    setTimeout(() => {
+      document.getElementById('step3Card').classList.add('hidden');
+      document.getElementById('successScreen').classList.remove('hidden');
+      document.getElementById('successName').textContent = state.uploaderName;
+      document.getElementById('finalCount').textContent = results.filter(r => r.success).length;
+      document.getElementById('successScreen').scrollIntoView({ behavior: 'smooth' });
+
+      if (state.remainingUploads <= 0) {
+        document.getElementById('uploadMoreBtn').style.display = 'none';
+      }
+    }, 800);
+  }
+
+  async function uploadSingleFile(file, index, statusEl, iconEl) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('token', state.token);
+    formData.append('name', state.uploaderName);
+    formData.append('index', index);
+
+    const response = await fetch(`${CONFIG.backendUrl}/api/upload`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.message || 'Upload failed');
+    }
+
+    const data = await response.json();
+    statusEl.textContent = 'Saved ✓';
+    iconEl.textContent = '✅';
+    return data;
+  }
+
+  function uploadMore() {
+    if (state.remainingUploads <= 0) {
+      showBlockedScreen();
+      document.getElementById('mainContent').classList.add('hidden');
+      document.getElementById('successScreen').classList.add('hidden');
+      return;
+    }
+
+    document.getElementById('successScreen').classList.add('hidden');
+    document.getElementById('step2Card').classList.remove('hidden');
+    document.getElementById('step2Card').classList.remove('completed');
+    document.getElementById('mainContent').classList.remove('hidden');
+    renderPreviews();
+    updateUploadBtn();
+    updateRemainingText();
+    updateProgress();
+  }
+
+  // ============================
+  // Toast
+  // ============================
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // Name input — submit on Enter
+  document.addEventListener('DOMContentLoaded', () => {
+    const nameInput = document.getElementById('nameInput');
+    if (nameInput) {
+      nameInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') submitName();
+      });
+    }
+  });
+</script>
+</body>
+</html>
