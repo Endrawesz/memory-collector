@@ -147,7 +147,15 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     if (!token) return res.status(400).json({ error: 'No token' });
 
     localPath = path.join(UPLOADS_DIR, file.filename);
-    console.log(`File saved: ${localPath} exists=${fs.existsSync(localPath)}`);
+        console.log('=== UPLOAD DEBUG ===');
+        console.log('file.filename:', file.filename);
+        console.log('file.originalname:', file.originalname);
+        console.log('file.mimetype:', file.mimetype);
+        console.log('file.size:', file.size);
+        console.log('localPath:', localPath);
+        console.log('exists:', fs.existsSync(localPath));
+        console.log('UPLOADS_DIR contents:', fs.readdirSync(UPLOADS_DIR));
+        console.log('===================');
 
     const tokenData = db.tokens.find(t => t.token === token);
     if (!tokenData) return res.status(404).json({ error: 'Invalid token' });
